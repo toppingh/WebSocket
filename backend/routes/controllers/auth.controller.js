@@ -1,7 +1,8 @@
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcryptjs";
 import User from "../../models/user.model.js";
 import generateTokenAndSetCookie from "../../utils/generateToken.js";
 
+// 회원가입 요청 및 응답
 export const signup = async (req, res) => {
     try {
         const {fullName, username, password, confirmPassword, gender}  = req.body;
@@ -58,10 +59,33 @@ export const signup = async (req, res) => {
     }
 };
 
-export const login = (req, res) => {
-    console.log("loginUser");
+// 로그인 요청 및 응답
+export const login = async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = await User.findOne({username});
+        const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
+
+        if (!user || !isPasswordCorrect) {
+            return res.status(400).json({error: "닉네임이나 비밀번호가 올바르지않습니다."});
+        }
+
+        generateTokenAndSetCookie(user._id, res);
+
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            username: user.username,
+            profilePic: user.profilePic,
+        });
+
+    } catch (error) {
+        console.error(`로그인 에러 발생 : ${error.message}`);
+        res.status(500).json({error: "Internal Server Error"});
+    }
 }
 
+// 로그아웃 요청 및 응답
 export const logout = (req,res) => {
     console.log("logoutUser");
 }
