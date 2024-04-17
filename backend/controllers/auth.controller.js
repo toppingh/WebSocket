@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import User from "../../models/user.model.js";
-import generateTokenAndSetCookie from "../../utils/generateToken.js";
+import User from "../models/user.model.js";
+import generateTokenAndSetCookie from "../utils/generateToken.js"
 
 // 회원가입 요청 및 응답
 export const signup = async (req, res) => {
