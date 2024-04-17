@@ -22,8 +22,8 @@ export const signup = async (req, res) => {
         }
 
         // HASH PW
-        const salt = await bcryptjs.genSalt(10);
-        const hashedPassword = await bcryptjs.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // 아바타 사진 api : https://avatar.iran.liara.run/
         const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
@@ -70,7 +70,7 @@ export const login = async (req, res) => {
             return res.status(400).json({error: "닉네임이나 비밀번호가 올바르지않습니다."});
         }
 
-        generateTokenAndSetCookie(user._id, res);
+        generateTokenAndSetCookie(user._id, res); // 토큰 + 쿠키 셋팅
 
         res.status(200).json({
             _id: user._id,
