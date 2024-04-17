@@ -87,5 +87,11 @@ export const login = async (req, res) => {
 
 // 로그아웃 요청 및 응답
 export const logout = (req,res) => {
-    console.log("logoutUser");
+    try {
+        res.cookie("jwt", "", {maxAge: 0}); // 로그아웃 요청시 쿠키를 빈 문자열로
+        res.status(200).json({message: "로그아웃 완료!"});
+    } catch (error) {
+        console.log(`로그아웃 에러 발생 : ${error.message}`);
+        res.status(500).json({error:"Internal Server Error"});
+    }
 }
